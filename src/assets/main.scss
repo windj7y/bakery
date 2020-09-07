@@ -1,0 +1,340 @@
+@import '~bootstrap/scss/functions';
+@import './variables';
+@import "~bootstrap/scss/mixins";
+@import '~bootstrap';
+
+a, a:hover {
+  text-decoration: none;
+  outline: none;
+}
+
+.navbar-nav {
+  .nav-item {
+    a {
+      &.router-link-exact-active {
+        font-weight: bold;
+        color: rgba(0, 0, 0, .9);
+      }
+    }
+  }
+}
+
+ul {
+  list-style: none;
+  padding-inline-start: 0;
+}
+
+.table td{
+  vertical-align: middle;
+}
+
+.table th, .table td{
+  text-align: center;
+}
+
+.bg-bright {
+  background-color: rgba(255, 255, 255, .5);
+}
+
+.bg-light-gray {
+  background-color: #f8f9fa;
+}
+
+// app
+
+.logo {
+  font-family: 'Gruppo', cursive;
+  font-size: 28px;
+}
+
+.footer {
+  padding: 30px 0;
+  background-color: #373233;
+  color: #fff;
+}
+
+.icon {
+  color: #fff;
+
+  i{
+    width: 20px;
+    height: 20px;
+  }
+
+  &:hover {
+    color: #373233;
+    background-color: #fff;
+    border-radius: 50%;
+  }
+}
+
+.gotop {
+  z-index: 1;
+  position: fixed;
+  right: 40px;
+  bottom: 40px;
+  padding: 0 15px;
+  font-size: 30px;
+  background-color: rgba(119, 119, 119, .5);
+  color: #fff;
+  cursor: pointer;
+  border-radius: 5px;
+
+  &:hover {
+    background-color: rgba(119, 119, 119, .8);
+    color: #fff;
+  }  
+}
+
+// home
+
+.cart-link {
+  position: relative;
+
+  .cart-num {
+    position: absolute;
+    top: 3px;
+    left: 20px;
+  }
+}
+
+// index
+
+.index-banner {
+  background-image: url(https://hexschool-api.s3.us-west-2.amazonaws.com/custom/Gdd4obz1s23P5UPbCfxAsfhEecdZHXwH1GiYR4Zi1D1L9bF5KRzzpfhN776XfOxKdsTAL3YWsCKxT6BIOhqQHjZrwfuX9ZBqCrk0kqesw15klweDiIDCx86TC31WbUlT.jpg);
+  background-size: cover;
+  background-position: center 20%;
+  min-height: 450px;
+}
+
+.feature {
+  &:nth-child(odd) {
+    background-color: #fff3cd;
+  }
+
+  &:nth-child(even) {
+    background-color: #ffe9a5;
+  }
+
+  .feature-border {
+    border: 3px solid #fff;
+  }  
+}
+
+.product-title {
+  border-left: 5px solid #fccf4e;
+}
+
+.product {
+  color: #555;
+
+  &:hover {
+    color: #555;
+    box-shadow: 0 5px 15px #aaa;
+  }
+}
+
+.price {
+  font-size: 20px;
+  color: #f17561;
+}
+
+.slick-slider {
+  .slick-prev:before {
+    color: #884D2A;
+  }
+  .slick-next:before {
+    color: #884D2A;
+  }
+}
+
+.slick-slide {
+  div {
+    outline: none;
+  }
+}
+
+// about
+
+.iframe-container{
+  position: relative;
+  width: 100%;
+  padding-bottom: 33%;
+
+  iframe {
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: 0;
+    padding: 0 15px;
+    height: 100%;
+    width: 100%;
+  }
+}
+
+.about-title {
+  font-size: 32px;
+  font-weight: bold;
+  letter-spacing: 5px;
+  border-bottom: 1px solid #999;
+}
+
+.about-subtitle {
+  font-weight: bold;
+  color: #ab6135;
+  line-height: 1.5;
+}
+
+.about-desc {
+  font-size: 18px;
+  text-align: justify;
+  line-height: 2;
+}
+
+// products
+
+.products-banner {
+  background-image: url(https://hexschool-api.s3.us-west-2.amazonaws.com/custom/SqOK4GrS4AGwukw72q1mYCiGKPjT124xHb2EgL9wcFgSPxMSKs306lAqYcRGlKeWobmZzQ4SUesJ3hTcGd8XWIvEDm1jVWSrUv9DdaPceb62Y1mJRQUkmFkzFhBalDfR.jpg);
+  background-size: cover;
+  background-position: 35% 30%;
+  min-height: 450px;
+}
+
+.products-banner-text {
+  background-color: rgba(255, 255, 255, .75);
+  font-size: 36px;
+  font-weight: bold;
+  letter-spacing: 5px;
+  padding: 2rem;
+}
+
+.product-item {
+  color: #555;
+  padding: .25rem 1.25rem;
+  border: 2px solid rgba(0, 0, 0, .125);
+  border-style: none solid;
+
+  &:hover, &:active {
+    background-color: #fff;
+    color: #ab6135;
+  }
+
+  &.active {
+    background-color: #fff;
+    color: #824420;
+    border-color: rgba(0, 0, 0, .125);
+  }
+}
+
+.card-footer {
+  background-color: #fff;
+  border-top: 0;
+}
+
+// product
+
+.origin-price{
+  color: #c4c4c4;
+  text-decoration: line-through;
+}
+
+.price-size {
+  font-size: 24px;
+}
+
+// cart
+
+.cart-banner {
+  background-image: url(https://hexschool-api.s3.us-west-2.amazonaws.com/custom/qtkL6pU5X4CwqNc5uZ8YLlQ8zv4etuoUQ5siuf9cMpyAdTtisAO6zq3L6Kuz1tP4A0yPC7Qh1EYOpF28wlTYCDYzcm91irLaeoSwJB1RAJCM6XlFD0gGdnDmC8WTCq5A.jpg);
+  background-size: cover;
+  background-position: 35% 25%;
+  min-height: 380px;
+}
+
+.cart-step {
+  color: #824420;
+  border: 1px solid #824420; 
+  border-radius: 10px;
+}
+
+.alert-now {
+  background-color: #ed7d31;
+  color: #fff;
+  border: 0;
+}
+
+.alert-wait {
+  background-color: #fbe4d5;
+  color: #824420;
+  border: 0;
+}
+
+.alert-round {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+}
+
+.cart-list {
+  td {
+    border: 0;
+  }
+
+  thead th {
+    border: 0;
+    border-bottom: 1px solid #ed7d31;
+  }
+
+  tfoot td {
+    border-top: 1px solid #ed7d31;
+  }
+}
+
+.quantity {
+  width: 60px;
+  text-align: center;
+}
+
+// checkout
+
+.order-title {
+  font-weight: bold;
+  background-color: #fff;
+  color: #212529;
+  border-bottom: 2px solid #ed7d31;
+}
+
+.form-control {
+  border-radius: 0;
+}
+
+// complete
+
+.order-title-complete {
+  font-weight: bold;
+  color: #212529;
+  border-left: 5px solid #ed7d31;
+}
+
+@media screen and (max-width: 991px) {
+  .cart-link {
+    .cart-num {
+      left: 15px;
+    }
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .index-banner {
+    .display-4 {
+      font-size: 2.7rem;
+    }
+  }
+
+  .iframe-container {
+    padding-bottom: 56.25%; /* Ratio 16:9 ( 100%/16*9 = 56.25% ) */
+  }
+}
