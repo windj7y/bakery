@@ -40,24 +40,24 @@
       </tbody>
     </table>
 
-    <pagination :pages="pagination" @update="getCoupons"></pagination>
-    <couponModal :tempCoupon="tempCoupon" :deadline="deadline" @update="getCoupons"></couponModal>
-    <removeCouponModal :tempCoupon="tempCoupon" @update="getCoupons"></removeCouponModal>
+    <Pagination :pages="pagination" @update="getCoupons"></Pagination>
+    <CouponModal :tempCoupon="tempCoupon" :deadline="deadline" @update="getCoupons"></CouponModal>
+    <RemoveCouponModal :tempCoupon="tempCoupon" @update="getCoupons"></RemoveCouponModal>
   </div>
 </template>
 
 <script>
 /* global $ */
 
-import couponModal from '@/components/modal/CouponModal.vue';
-import removeCouponModal from '@/components/modal/RemoveCouponModal.vue';
-import pagination from '@/components/Pagination.vue';
+import CouponModal from '@/components/modal/CouponModal.vue';
+import RemoveCouponModal from '@/components/modal/RemoveCouponModal.vue';
+import Pagination from '@/components/Pagination.vue';
 
 export default {
   components: {
-    couponModal,
-    removeCouponModal,
-    pagination,
+    CouponModal,
+    RemoveCouponModal,
+    Pagination,
   },
   data() {
     return {
@@ -89,13 +89,13 @@ export default {
 
       this.$http.get(url)
         .then((res) => {
-          this.isLoading = false;
           this.coupons = res.data.data;
           this.pagination = res.data.meta.pagination;
+          this.isLoading = false;
         })
         .catch(() => {
-          this.isLoading = false;
           this.$toastr.e('無法顯示優惠券列表');
+          this.isLoading = false;
         });
     },
     getCoupon(id) {

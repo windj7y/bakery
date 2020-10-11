@@ -17,7 +17,7 @@
       <tbody>
         <tr v-for="item in storages" :key="item.id">
           <td>
-            <img :src="item.path" class="thumbnail">
+            <img :src="item.path" class="thumbnail" alt="product">
           </td>
           <td>
             <button type="button" class="btn btn-outline-danger btn-sm" title="刪除" @click="showModal(item)"><i class="fas fa-trash-alt"></i></button>
@@ -26,21 +26,21 @@
       </tbody>
     </table>
 
-    <pagination :pages="pagination" @update="getStorages"></pagination>
-    <removeImageModal :tempStorage="tempStorage" @update="getStorages"></removeImageModal>
+    <Pagination :pages="pagination" @update="getStorages"></Pagination>
+    <RemoveImageModal :tempStorage="tempStorage" @update="getStorages"></RemoveImageModal>
   </div>
 </template>
 
 <script>
 /* global $ */
 
-import removeImageModal from '@/components/modal/RemoveImageModal.vue';
-import pagination from '@/components/Pagination.vue';
+import RemoveImageModal from '@/components/modal/RemoveImageModal.vue';
+import Pagination from '@/components/Pagination.vue';
 
 export default {
   components: {
-    removeImageModal,
-    pagination,
+    RemoveImageModal,
+    Pagination,
   },
   data() {
     return {
@@ -62,13 +62,13 @@ export default {
 
       this.$http.get(url)
         .then((res) => {
-          this.isLoading = false;
           this.storages = res.data.data;
           this.pagination = res.data.meta.pagination;
+          this.isLoading = false;
         })
         .catch(() => {
-          this.isLoading = false;
           this.$toastr.e('無法顯示圖片列表');
+          this.isLoading = false;
         });
     },
   },

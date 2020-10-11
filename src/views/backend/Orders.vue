@@ -56,21 +56,21 @@
       </tbody>
     </table>
 
-    <pagination :pages="pagination" @update="getOrders"></pagination>
-    <orderModal :client="client"></orderModal>
+    <Pagination :pages="pagination" @update="getOrders"></Pagination>
+    <OrderModal :client="client"></OrderModal>
   </div>
 </template>
 
 <script>
 /* global $ */
 
-import orderModal from '@/components/modal/OrderModal.vue';
-import pagination from '@/components/Pagination.vue';
+import OrderModal from '@/components/modal/OrderModal.vue';
+import Pagination from '@/components/Pagination.vue';
 
 export default {
   components: {
-    orderModal,
-    pagination,
+    OrderModal,
+    Pagination,
   },
   data() {
     return {
@@ -89,13 +89,13 @@ export default {
 
       this.$http.get(url)
         .then((res) => {
-          this.isLoading = false;
           this.orders = res.data.data;
           this.pagination = res.data.meta.pagination;
+          this.isLoading = false;
         })
         .catch(() => {
-          this.isLoading = false;
           this.$toastr.e('無法顯示訂單列表');
+          this.isLoading = false;
         });
     },
     getOrder(id) {
@@ -120,14 +120,14 @@ export default {
 
       this.$http.patch(url)
         .then(() => {
-          this.isLoading = false;
           this.$toastr.s('更新付款狀態成功');
           this.getOrders();
+          this.isLoading = false;
         })
         .catch(() => {
-          this.isLoading = false;
           this.$toastr.e('更新付款狀態失敗');
           this.getOrders();
+          this.isLoading = false;
         });
     },
   },

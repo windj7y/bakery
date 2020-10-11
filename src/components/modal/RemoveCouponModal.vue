@@ -38,15 +38,15 @@ export default {
 
       this.$http.delete(url)
         .then(() => {
-          this.isLoading = false;
           $('#removeCouponModal').modal('hide');
           this.$toastr.s('刪除優惠券成功');
           this.$emit('update');
+          this.isLoading = false;
         })
         .catch(() => {
-          this.isLoading = false;
           $('#removeCouponModal').modal('hide');
           this.$toastr.e('刪除優惠券失敗');
+          this.isLoading = false;
         });
     },
   },

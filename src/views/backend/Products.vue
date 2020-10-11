@@ -42,24 +42,24 @@
       </tbody>
     </table>
 
-    <pagination :pages="pagination" @update="getProducts"></pagination>
-    <productModal :tempProduct="tempProduct" @update="getProducts"></productModal>
-    <removeModal :tempProduct="tempProduct" @update="getProducts"></removeModal>
+    <Pagination :pages="pagination" @update="getProducts"></Pagination>
+    <ProductModal :tempProduct="tempProduct" @update="getProducts"></ProductModal>
+    <RemoveModal :tempProduct="tempProduct" @update="getProducts"></RemoveModal>
   </div>
 </template>
 
 <script>
 /* global $ */
 
-import productModal from '@/components/modal/ProductModal.vue';
-import removeModal from '@/components/modal/RemoveModal.vue';
-import pagination from '@/components/Pagination.vue';
+import ProductModal from '@/components/modal/ProductModal.vue';
+import RemoveModal from '@/components/modal/RemoveModal.vue';
+import Pagination from '@/components/Pagination.vue';
 
 export default {
   components: {
-    productModal,
-    removeModal,
-    pagination,
+    ProductModal,
+    RemoveModal,
+    Pagination,
   },
   data() {
     return {
@@ -93,13 +93,13 @@ export default {
 
       this.$http.get(url)
         .then((res) => {
-          this.isLoading = false;
           this.products = res.data.data;
           this.pagination = res.data.meta.pagination;
+          this.isLoading = false;
         })
         .catch(() => {
-          this.isLoading = false;
           this.$toastr.e('無法顯示產品列表');
+          this.isLoading = false;
         });
     },
     getProduct(id) {

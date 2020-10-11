@@ -27,7 +27,7 @@
                     <input type="file" class="form-control-file" id="imageFile" ref="file" @change="uploadFile">
                     <div class="mt-2" v-if="uploadingStatus">圖片上傳中...</div>
                   </div>
-                  <img :src="tempProduct.imageUrl[0]" class="img-fluid mt-3">
+                  <img :src="tempProduct.imageUrl[0]" class="img-fluid mt-3" alt="product" v-if="tempProduct.imageUrl[0]">
                 </div>
                 <div class="col-8">
                   <div class="form-group">
@@ -147,15 +147,15 @@ export default {
 
       this.$http[method](url, this.tempProduct)
         .then(() => {
-          this.isLoading = false;
           $('#productModal').modal('hide');
           this.$toastr.s(`${type}產品成功`);
           this.$emit('update');
+          this.isLoading = false;
         })
         .catch(() => {
-          this.isLoading = false;
           $('#productModal').modal('hide');
           this.$toastr.e(`${type}產品失敗`);
+          this.isLoading = false;
         });
     },
     uploadFile() {

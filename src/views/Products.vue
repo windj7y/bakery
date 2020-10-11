@@ -1,30 +1,42 @@
 <template>
   <div>
     <loading :active.sync="isLoading"></loading>
-    <banner :bannerData="bannerData"></banner>
+    <Banner :bannerData="bannerData"></Banner>
 
-    <div class="p-4">
+    <div class="p-3">
       <div class="container">
-        <div class="list-group list-group-horizontal text-center font-weight-bold">
-          <a href="#all" class="list-group-item list-group-item-action active product-item" data-toggle="list">
-            <i class="fas fa-store"></i> 全部商品
-          </a>
-          <a href="#hot" class="list-group-item list-group-item-action product-item" data-toggle="list" @click.prevent="getList('hot')">
-            <i class="fab fa-hotjar"></i> 人氣商品
-          </a>
-          <a href="#new" class="list-group-item list-group-item-action product-item" data-toggle="list" @click.prevent="getList('new')">
-            <i class="fas fa-star"></i> 精選新品
-          </a>
-          <a href="#bread" class="list-group-item list-group-item-action product-item" data-toggle="list" @click.prevent="getList('bread')">
-            <i class="fas fa-bread-slice"></i> 麵包系列
-          </a>
-          <a href="#cake" class="list-group-item list-group-item-action product-item" data-toggle="list" @click.prevent="getList('cake')">
-            <i class="fas fa-birthday-cake"></i> 甜點蛋糕
-          </a>
-          <a href="#pie" class="list-group-item list-group-item-action product-item" data-toggle="list" @click.prevent="getList('pie')">
-            <i class="fas fa-chart-pie"></i> 手工派塔
-          </a>
-        </div>
+        <ul class="nav justify-content-md-around justify-content-center">
+          <li class="nav-item my-2">
+            <a href="#all" class="active product-item" data-toggle="list">
+              <i class="fas fa-store"></i> 全部商品
+            </a>
+          </li>
+          <li class="nav-item my-2">
+            <a href="#hot" class="product-item" data-toggle="list" @click.prevent="getList('hot')">
+              <i class="fab fa-hotjar"></i> 人氣商品
+            </a>
+          </li>
+          <li class="nav-item my-2">
+            <a href="#new" class="product-item" data-toggle="list" @click.prevent="getList('new')">
+              <i class="fas fa-star"></i> 精選新品
+            </a>
+          </li>
+          <li class="nav-item my-2">
+            <a href="#bread" class="product-item" data-toggle="list" @click.prevent="getList('bread')">
+              <i class="fas fa-bread-slice"></i> 麵包系列
+            </a>
+          </li>
+          <li class="nav-item my-2">
+            <a href="#cake" class="product-item" data-toggle="list" @click.prevent="getList('cake')">
+              <i class="fas fa-birthday-cake"></i> 甜點蛋糕
+            </a>
+          </li>
+          <li class="nav-item my-2">
+            <a href="#pie" class="product-item" data-toggle="list" @click.prevent="getList('pie')">
+              <i class="fas fa-chart-pie"></i> 手工派塔
+            </a>
+          </li>
+        </ul>
       </div>
     </div>
 
@@ -35,7 +47,11 @@
             <div class="row mb-4">
               <div class="col-md-3 mb-4" v-for="item in products" :key="item.id">
                 <div class="card text-center border-0 h-100 shadow-sm">
-                  <img :src="item.imageUrl[0]" class="card-img-top py-3" alt="...">
+                  <a href="#" class="heart-icon" @click.prevent="updateFavorite(item.id)">
+                    <i v-if="favoriteList.indexOf(item.id) === -1" class="far fa-heart fa-lg"></i>
+                    <i v-else class="fas fa-heart fa-lg"></i>
+                  </a>
+                  <img :src="item.imageUrl[0]" class="card-img-top py-3" :alt="item.title">
                   <div class="card-body">
                     <h5 class="card-title font-weight-bold">{{ item.title }}</h5>
                     <p class="card-text font-weight-bold price">NT$ {{ item.price | money }}</p>
@@ -53,13 +69,17 @@
                 </div>
               </div>
             </div>
-            <pagination :pages="pagination" @update="getProducts"></pagination>
+            <Pagination :pages="pagination" @update="getProducts"></Pagination>
           </div>
           <div class="tab-pane" id="hot">
             <div class="row">
               <div class="col-md-3 mb-4" v-for="item in productType.hot" :key="item.id">
                 <div class="card text-center border-0 h-100 shadow-sm">
-                  <img :src="item.imageUrl[0]" class="card-img-top py-3" alt="...">
+                  <a href="#" class="heart-icon" @click.prevent="updateFavorite(item.id)">
+                    <i v-if="favoriteList.indexOf(item.id) === -1" class="far fa-heart fa-lg"></i>
+                    <i v-else class="fas fa-heart fa-lg"></i>
+                  </a>
+                  <img :src="item.imageUrl[0]" class="card-img-top py-3" :alt="item.title">
                   <div class="card-body">
                     <h5 class="card-title font-weight-bold">{{ item.title }}</h5>
                     <p class="card-text font-weight-bold price">NT$ {{ item.price | money }}</p>
@@ -82,7 +102,11 @@
             <div class="row">
               <div class="col-md-3 mb-4" v-for="item in productType.new" :key="item.id">
                 <div class="card text-center border-0 h-100 shadow-sm">
-                  <img :src="item.imageUrl[0]" class="card-img-top py-3" alt="...">
+                  <a href="#" class="heart-icon" @click.prevent="updateFavorite(item.id)">
+                    <i v-if="favoriteList.indexOf(item.id) === -1" class="far fa-heart fa-lg"></i>
+                    <i v-else class="fas fa-heart fa-lg"></i>
+                  </a>
+                  <img :src="item.imageUrl[0]" class="card-img-top py-3" :alt="item.title">
                   <div class="card-body">
                     <h5 class="card-title font-weight-bold">{{ item.title }}</h5>
                     <p class="card-text font-weight-bold price">NT$ {{ item.price | money }}</p>
@@ -105,7 +129,11 @@
             <div class="row">
               <div class="col-md-3 mb-4" v-for="item in productType.bread" :key="item.id">
                 <div class="card text-center border-0 h-100 shadow-sm">
-                  <img :src="item.imageUrl[0]" class="card-img-top py-3" alt="...">
+                  <a href="#" class="heart-icon" @click.prevent="updateFavorite(item.id)">
+                    <i v-if="favoriteList.indexOf(item.id) === -1" class="far fa-heart fa-lg"></i>
+                    <i v-else class="fas fa-heart fa-lg"></i>
+                  </a>
+                  <img :src="item.imageUrl[0]" class="card-img-top py-3" :alt="item.title">
                   <div class="card-body">
                     <h5 class="card-title font-weight-bold">{{ item.title }}</h5>
                     <p class="card-text font-weight-bold price">NT$ {{ item.price | money }}</p>
@@ -128,7 +156,11 @@
             <div class="row">
               <div class="col-md-3 mb-4" v-for="item in productType.cake" :key="item.id">
                 <div class="card text-center border-0 h-100 shadow-sm">
-                  <img :src="item.imageUrl[0]" class="card-img-top py-3" alt="...">
+                  <a href="#" class="heart-icon" @click.prevent="updateFavorite(item.id)">
+                    <i v-if="favoriteList.indexOf(item.id) === -1" class="far fa-heart fa-lg"></i>
+                    <i v-else class="fas fa-heart fa-lg"></i>
+                  </a>
+                  <img :src="item.imageUrl[0]" class="card-img-top py-3" :alt="item.title">
                   <div class="card-body">
                     <h5 class="card-title font-weight-bold">{{ item.title }}</h5>
                     <p class="card-text font-weight-bold price">NT$ {{ item.price | money }}</p>
@@ -151,7 +183,11 @@
             <div class="row">
               <div class="col-md-3 mb-4" v-for="item in productType.pie" :key="item.id">
                 <div class="card text-center border-0 h-100 shadow-sm">
-                  <img :src="item.imageUrl[0]" class="card-img-top py-3" alt="...">
+                  <a href="#" class="heart-icon" @click.prevent="updateFavorite(item.id)">
+                    <i v-if="favoriteList.indexOf(item.id) === -1" class="far fa-heart fa-lg"></i>
+                    <i v-else class="fas fa-heart fa-lg"></i>
+                  </a>
+                  <img :src="item.imageUrl[0]" class="card-img-top py-3" :alt="item.title">
                   <div class="card-body">
                     <h5 class="card-title font-weight-bold">{{ item.title }}</h5>
                     <p class="card-text font-weight-bold price">NT$ {{ item.price | money }}</p>
@@ -174,22 +210,22 @@
       </div>
     </div>
 
-    <noticeModal :notice="notice"></noticeModal>
+    <NoticeModal :notice="notice"></NoticeModal>
   </div>
 </template>
 
 <script>
 /* global $ */
 
-import banner from '@/components/Banner.vue';
-import noticeModal from '@/components/modal/NoticeModal.vue';
-import pagination from '@/components/Pagination.vue';
+import Banner from '@/components/Banner.vue';
+import NoticeModal from '@/components/modal/NoticeModal.vue';
+import Pagination from '@/components/Pagination.vue';
 
 export default {
   components: {
-    banner,
-    noticeModal,
-    pagination,
+    Banner,
+    NoticeModal,
+    Pagination,
   },
   data() {
     return {
@@ -210,6 +246,7 @@ export default {
         title: '商品介紹',
         class: 'products-banner',
       },
+      favoriteList: JSON.parse(localStorage.getItem('favoriteList')) || [],
       pagination: {},
       isLoading: false,
       loadingItem: '',
@@ -222,13 +259,22 @@ export default {
 
       this.$http.get(url)
         .then((res) => {
-          this.isLoading = false;
           this.products = res.data.data;
           this.productType.new = JSON.parse(JSON.stringify(this.products));
           this.productsOrder = JSON.parse(JSON.stringify(this.products.sort((a, b) => a.options.order - b.options.order)));
           this.products = this.calculatePage(page, this.productsOrder);
+
+          this.isLoading = false;
         })
         .catch(() => {
+          this.notice.msg = '無法取得商品清單';
+          this.notice.class = 'error';
+          $('#noticeModal').modal('show');
+
+          setTimeout(() => {
+            $('#noticeModal').modal('hide');
+          }, 1000);
+
           this.isLoading = false;
         });
     },
@@ -315,6 +361,26 @@ export default {
       };
 
       return pageData;
+    },
+    updateFavorite(id) {
+      const favoriteId = this.favoriteList.indexOf(id);
+
+      if (favoriteId === -1) {
+        this.favoriteList.push(id);
+        this.notice.msg = '已加入收藏。';
+        this.notice.class = 'success';
+      } else {
+        this.favoriteList.splice(favoriteId, 1);
+        this.notice.msg = '已取消收藏。';
+        this.notice.class = 'success';
+      }
+      localStorage.setItem('favoriteList', JSON.stringify(this.favoriteList));
+
+      $('#noticeModal').modal('show');
+
+      setTimeout(() => {
+        $('#noticeModal').modal('hide');
+      }, 1000);
     },
   },
   created() {

@@ -18,6 +18,11 @@
               <router-link class="nav-link" to="/products">商品介紹</router-link>
             </li>
             <li class="nav-item">
+              <router-link class="nav-link" to="/favorite">
+                <i class="fas fa-heart"></i>
+              </router-link>
+            </li>
+            <li class="nav-item">
               <router-link class="nav-link cart-link" to="/cart">
                 <i class="fas fa-shopping-cart"></i>
                 <span class="badge badge-pill badge-danger cart-num">{{ quantity }}</span>

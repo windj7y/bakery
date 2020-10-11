@@ -1,14 +1,20 @@
 <template>
   <div>
     <loading :active.sync="isLoading"></loading>
-    <banner :bannerData="bannerData"></banner>
+    <Banner :bannerData="bannerData"></Banner>
 
     <div class="container my-5">
       <div class="row justify-content-center">
         <div class="col-md-8">
-          <shoppingProcess :process="process"></shoppingProcess>
+          <ShoppingProcess :process="process"></ShoppingProcess>
 
-          <table class="table cart-list mb-4">
+          <div v-if="cart.length === 0">
+            <p class="h3 text-center">
+              您的購物車目前是空的，快去<router-link class="buy" to="/products">選購商品</router-link>吧！
+            </p>
+          </div>
+
+          <table v-else class="table cart-list mb-4">
             <thead>
               <tr>
                 <th colspan="2" scope="col">商品名稱</th>
@@ -18,17 +24,10 @@
                 <th scope="col"></th>
               </tr>
             </thead>
-            <tbody v-if="cart.length === 0">
-              <tr>
-                <td colspan="6" class="font-weight-bold">
-                  無選購商品
-                </td>
-              </tr>
-            </tbody>
-            <tbody v-else>
+            <tbody>
               <tr v-for="item in cart" :key="item.product.id">
                 <td width="120px">
-                  <img class="img-fluid" :src="item.product.imageUrl[0]">
+                  <img class="img-fluid" :src="item.product.imageUrl[0]" :alt="item.product.title">
                 </td>
                 <td class="text-left">
                   {{ item.product.title }}
@@ -61,13 +60,13 @@
                   <div class="input-group mb-3">
                     <input type="text" class="form-control" placeholder="請輸入優惠碼" v-model="code">
                     <div class="input-group-append">
-                      <button class="btn btn-outline-primary" type="button" @click="checkCode">套用</button>
+                      <button class="btn btn-outline-primary" type="button" @click="checkCode" :disabled="code === ''">套用</button>
                     </div>
                   </div>
                 </td>
               </tr>
             </tbody>
-            <tfoot v-if="cart.length">
+            <tfoot>
               <tr>
                 <td colspan="4" class="text-center font-weight-bold">
                   總計
@@ -79,7 +78,7 @@
             </tfoot>
           </table>
 
-          <div class="d-flex justify-content-between">
+          <div v-if="cart.length !== 0" class="d-flex justify-content-between">
             <button type="button" class="btn btn-outline-secondary" @click="goProducts">
               <i class="fas fa-angle-left"></i> 繼續購物
             </button>
@@ -91,22 +90,22 @@
       </div>
     </div>
 
-    <noticeModal :notice="notice"></noticeModal>
+    <NoticeModal :notice="notice"></NoticeModal>
   </div>
 </template>
 
 <script>
 /* global $ */
 
-import banner from '@/components/Banner.vue';
-import shoppingProcess from '@/components/ShoppingProcess.vue';
-import noticeModal from '@/components/modal/NoticeModal.vue';
+import Banner from '@/components/Banner.vue';
+import ShoppingProcess from '@/components/ShoppingProcess.vue';
+import NoticeModal from '@/components/modal/NoticeModal.vue';
 
 export default {
   components: {
-    banner,
-    shoppingProcess,
-    noticeModal,
+    Banner,
+    ShoppingProcess,
+    NoticeModal,
   },
   data() {
     return {
@@ -135,7 +134,6 @@ export default {
 
       this.$http.get(url)
         .then((res) => {
-          this.isLoading = false;
           this.cart = res.data.data;
           this.cartTotal = 0;
 
@@ -148,12 +146,35 @@ export default {
             this.discount = Math.round(this.cartTotal * (1 - this.coupon.percent / 100));
             this.cartTotal -= this.discount;
           }
+
+          this.isLoading = false;
         })
         .catch(() => {
+          this.notice.msg = '無法取得購物車清單';
+          this.notice.class = 'error';
+          $('#noticeModal').modal('show');
+
+          setTimeout(() => {
+            $('#noticeModal').modal('hide');
+          }, 1000);
+
           this.isLoading = false;
         });
     },
     updateCart(id, num) {
+      if (num <= 0) {
+        this.notice.msg = '數量不可小於1';
+        this.notice.class = 'error';
+        $('#noticeModal').modal('show');
+
+        setTimeout(() => {
+          $('#noticeModal').modal('hide');
+          this.getCart();
+        }, 1000);
+
+        return;
+      }
+
       const url = `${process.env.VUE_APP_APIPATH}api/${process.env.VUE_APP_UUID}/ec/shopping`;
       const cart = {
         product: id,
@@ -210,20 +231,6 @@ export default {
         });
     },
     checkCode() {
-      if (this.code === '') {
-        this.notice.msg = '請輸入優惠碼';
-        this.notice.class = 'error';
-        this.coupon = '';
-        $('#noticeModal').modal('show');
-
-        setTimeout(() => {
-          $('#noticeModal').modal('hide');
-          this.getCart();
-        }, 1000);
-
-        return;
-      }
-
       this.isLoading = true;
       const url = `${process.env.VUE_APP_APIPATH}api/${process.env.VUE_APP_UUID}/ec/coupon/search`;
       const codeData = {
@@ -231,7 +238,6 @@ export default {
       };
       this.$http.post(url, codeData)
         .then((res) => {
-          this.isLoading = false;
           this.coupon = res.data.data;
 
           // 取得現在時間戳
@@ -262,9 +268,10 @@ export default {
           } else {
             this.getCart();
           }
+
+          this.isLoading = false;
         })
         .catch(() => {
-          this.isLoading = false;
           this.notice.msg = '無此優惠碼。';
           this.notice.class = 'error';
           $('#noticeModal').modal('show');
@@ -272,6 +279,8 @@ export default {
           setTimeout(() => {
             $('#noticeModal').modal('hide');
           }, 1000);
+
+          this.isLoading = false;
         });
     },
     goProducts() {

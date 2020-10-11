@@ -1,12 +1,12 @@
 <template>
   <div>
     <loading :active.sync="isLoading"></loading>
-    <banner :bannerData="bannerData"></banner>
+    <Banner :bannerData="bannerData"></Banner>
 
     <div class="container my-5">
       <div class="row justify-content-center">
         <div class="col-md-8">
-          <shoppingProcess :process="process"></shoppingProcess>
+          <ShoppingProcess :process="process"></ShoppingProcess>
 
           <div class="card border-0">
             <h4 class="card-header order-title pb-3">訂購者資訊</h4>
@@ -15,34 +15,34 @@
                 <div class="card-body">
                   <div class="form-group">
                     <validation-provider rules="required" v-slot="{ errors, classes }">
-                      <label for="username">姓名</label>
+                      <label for="username">* 姓名</label>
                       <input type="text" class="form-control" :class="classes" name="姓名" id="username" v-model="form.name">
                       <span class="invalid-feedback">{{ errors[0] }}</span>
                     </validation-provider>
                   </div>
                   <div class="form-group">
                     <validation-provider rules="required|email" v-slot="{ errors, classes }">
-                      <label for="email">信箱</label>
+                      <label for="email">* 信箱</label>
                       <input type="email" class="form-control" :class="classes" name="信箱" id="email" v-model="form.email">
                       <span class="invalid-feedback">{{ errors[0] }}</span>
                     </validation-provider>
                   </div>
                   <div class="form-group">
                     <validation-provider rules="required|min:8" v-slot="{ errors, classes }">
-                      <label for="phone">電話</label>
+                      <label for="phone">* 電話</label>
                       <input type="tel" class="form-control" :class="classes" name="電話" id="phone" v-model="form.tel">
                       <span class="invalid-feedback">{{ errors[0] }}</span>
                     </validation-provider>
                   </div>
                   <div class="form-group">
                     <validation-provider rules="required" v-slot="{ errors, classes }">
-                      <label for="address">地址</label>
+                      <label for="address">* 地址</label>
                       <input type="text" class="form-control" :class="classes" name="地址" id="address" v-model="form.address">
                       <span class="invalid-feedback">{{ errors[0] }}</span>
                     </validation-provider>
                   </div>
                   <div class="form-group">
-                    <label for="payment">付款方式</label>
+                    <label for="payment">* 付款方式</label>
                     <select class="form-control" name="payment" id="payment" v-model="form.payment" required>
                       <option value="" disabled>
                           請選擇
@@ -91,22 +91,22 @@
       </div>
     </div>
 
-    <noticeModal :notice="notice"></noticeModal>
+    <NoticeModal :notice="notice"></NoticeModal>
   </div>
 </template>
 
 <script>
 /* global $ */
 
-import banner from '@/components/Banner.vue';
-import shoppingProcess from '@/components/ShoppingProcess.vue';
-import noticeModal from '@/components/modal/NoticeModal.vue';
+import Banner from '@/components/Banner.vue';
+import ShoppingProcess from '@/components/ShoppingProcess.vue';
+import NoticeModal from '@/components/modal/NoticeModal.vue';
 
 export default {
   components: {
-    banner,
-    shoppingProcess,
-    noticeModal,
+    Banner,
+    ShoppingProcess,
+    NoticeModal,
   },
   data() {
     return {
@@ -141,8 +141,6 @@ export default {
 
       this.$http.post(url, this.form)
         .then((res) => {
-          this.isLoading = false;
-
           this.notice.msg = '恭喜你完成訂單。';
           this.notice.class = 'success';
           $('#noticeModal').modal('show');
@@ -152,10 +150,10 @@ export default {
             this.$bus.$emit('updateQuantity', 0, 1);
             this.$router.push(`/complete/${res.data.data.id}`);
           }, 1000);
+
+          this.isLoading = false;
         })
         .catch(() => {
-          this.isLoading = false;
-
           this.notice.msg = '建立訂單失敗。';
           this.notice.class = 'error';
           $('#noticeModal').modal('show');
@@ -163,6 +161,8 @@ export default {
           setTimeout(() => {
             $('#noticeModal').modal('hide');
           }, 1000);
+
+          this.isLoading = false;
         });
     },
   },

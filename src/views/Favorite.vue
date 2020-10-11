@@ -1,50 +1,48 @@
 <template>
   <div>
     <loading :active.sync="isLoading"></loading>
-    <div class="container my-4">
-      <div class="row mb-4">
-        <div class="col-md-6 mb-4">
-          <img :src="product.imageUrl[0]" class="img-fluid" :alt="product.title">
-        </div>
-        <div class="col-md-6 d-flex flex-column justify-content-center px-5">
-          <h2 class="font-weight-bold mb-4">{{ product.title }}</h2>
-          <p class="about-desc">
-            {{ product.description }}
-          </p>
-          <div class="text-right mb-3">
-            <p v-if="product.origin_price && product.origin_price !== product.price" class="origin-price mb-0">NT$ {{ product.origin_price | money }}</p>
-            <p v-if="product.price" class="font-weight-bold price price-size">NT$ {{ product.price | money }}</p>
-          </div>
-          <div class="d-flex justify-content-between mb-3">
-            <input type="number" name="數量" class="form-control quantity w-50 mr-4" min="1" v-model="quantity" @change="checkQuantity()">
-            <button type="button" class="btn btn-primary w-50" @click="addCart(product.id)" :disabled="loadingItem === product.id">
-              <span v-if="loadingItem === product.id" >
-                <span class="spinner-border spinner-border-sm"></span>
-                加入中
-              </span>
-              <span v-else>加入購物車</span>
-            </button>
-          </div>
-          <div class="text-right">
-            <button type="button" class="btn btn-outline-primary" @click="updateFavorite(product.id)">
-              <span v-if="favoriteList.indexOf(product.id) === -1">
-                <i class="far fa-heart"></i> 加入收藏
-              </span>
-              <span v-else>
-                <i class="fas fa-heart"></i> 已加入收藏
-              </span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+    <Banner :bannerData="bannerData"></Banner>
 
-    <div class="bg-light-gray p-5">
-      <div class="container">
-        <h3 class="mb-4 pl-2 product-title">你可能也會喜歡</h3>
+    <div class="bg-light-gray p-4">
+      <div class="container pt-4">
+        <div v-if="favorites.length === 0" class="mb-5">
+          <p class="h3 text-center">
+            您的收藏目前是空的，快前往<router-link class="buy" to="/products">商品區</router-link>逛逛吧！
+          </p>
+        </div>
+
+        <div v-else>
+          <h3 class="favorite-title pb-3 mb-5">收藏清單</h3>
+          <div class="row mb-4">
+            <div class="col-md-3 mb-4" v-for="item in favorites" :key="item.id">
+              <div class="card text-center border-0 h-100 shadow-sm">
+                <a href="#" class="heart-icon" @click.prevent="removeFavorite(item.id)">
+                  <i class="fas fa-heart fa-lg"></i>
+                </a>
+                <img :src="item.imageUrl[0]" class="card-img-top py-3" :alt="item.title">
+                <div class="card-body">
+                  <h5 class="card-title font-weight-bold">{{ item.title }}</h5>
+                  <p class="card-text font-weight-bold price">NT$ {{ item.price | money }}</p>
+                </div>
+                <div class="card-footer d-flex justify-content-between">
+                  <button type="button" class="btn btn-outline-secondary" @click="goProduct(item.id)">了解更多</button>
+                  <button type="button" class="btn btn-primary" @click="addCart(item.id)" :disabled="loadingItem === item.id">
+                    <span v-if="loadingItem === item.id" >
+                      <span class="spinner-border spinner-border-sm"></span>
+                      加入中
+                    </span>
+                    <span v-else>加入購物車</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <h3 class="mb-4 pl-2 product-title">人氣商品</h3>
         <div class="mb-4">
-          <VueSlickCarousel v-bind="settings" v-if="products.length">
-            <div class="p-3" v-for="item in products" :key="item.id">
+          <VueSlickCarousel v-bind="settings" v-if="hotProducts.length">
+            <div class="p-3" v-for="item in hotProducts" :key="item.id">
               <div class="card text-center border-0 h-100 shadow-sm">
                 <router-link class="product" :to="`/product/${item.id}`">
                   <img :src="item.imageUrl[0]" class="card-img-top py-3" :alt="item.title">
@@ -70,24 +68,29 @@
 import VueSlickCarousel from 'vue-slick-carousel';
 import 'vue-slick-carousel/dist/vue-slick-carousel.css';
 import 'vue-slick-carousel/dist/vue-slick-carousel-theme.css';
+import Banner from '@/components/Banner.vue';
 import NoticeModal from '@/components/modal/NoticeModal.vue';
 
 export default {
   components: {
     VueSlickCarousel,
+    Banner,
     NoticeModal,
   },
   data() {
     return {
       products: [],
-      product: {
-        imageUrl: [],
-      },
+      hotProducts: [],
+      favorites: [],
+      favoriteList: JSON.parse(localStorage.getItem('favoriteList')) || [],
       notice: {
         msg: '',
         class: '',
       },
-      quantity: 1,
+      bannerData: {
+        title: '我的收藏',
+        class: 'cart-banner',
+      },
       settings: {
         dots: false,
         infinite: false,
@@ -121,41 +124,21 @@ export default {
           },
         ],
       },
-      favoriteList: JSON.parse(localStorage.getItem('favoriteList')) || [],
       isLoading: false,
       loadingItem: '',
     };
   },
   methods: {
-    getProduct() {
-      const { id } = this.$route.params;
-      const url = `${process.env.VUE_APP_APIPATH}api/${process.env.VUE_APP_UUID}/ec/product/${id}`;
-
-      this.$http.get(url)
-        .then((res) => {
-          this.product = res.data.data;
-          this.getProducts(this.product.category, this.product.id);
-        })
-        .catch(() => {
-          this.notice.msg = '無法取得商品資料';
-          this.notice.class = 'error';
-          $('#noticeModal').modal('show');
-
-          setTimeout(() => {
-            $('#noticeModal').modal('hide');
-          }, 1000);
-        });
-    },
-    getProducts(type, id) {
+    getProducts() {
       this.isLoading = true;
       const url = `${process.env.VUE_APP_APIPATH}api/${process.env.VUE_APP_UUID}/ec/products`;
 
       this.$http.get(url)
         .then((res) => {
           this.products = res.data.data;
-          this.products = this.products.sort((a, b) => a.options.order - b.options.order);
-          this.products = this.products.filter((item) => item.category === type && item.id !== id);
-
+          this.products = JSON.parse(JSON.stringify(this.products.sort((a, b) => a.options.order - b.options.order)));
+          this.hotProducts = this.products.filter((item) => item.options.isHot);
+          this.getFavorites();
           this.isLoading = false;
         })
         .catch(() => {
@@ -170,12 +153,18 @@ export default {
           this.isLoading = false;
         });
     },
+    getFavorites() {
+      this.favorites = this.products.filter((item) => this.favoriteList.indexOf(item.id) > -1);
+    },
+    goProduct(id) {
+      this.$router.push(`/product/${id}`);
+    },
     addCart(id) {
       this.loadingItem = id;
       const url = `${process.env.VUE_APP_APIPATH}api/${process.env.VUE_APP_UUID}/ec/shopping`;
       const cart = {
         product: id,
-        quantity: this.quantity,
+        quantity: 1,
       };
 
       this.$http.post(url, cart)
@@ -190,7 +179,7 @@ export default {
             $('#noticeModal').modal('hide');
           }, 1000);
 
-          this.$bus.$emit('updateQuantity', 1);
+          this.$bus.$emit('updateQuantity', cart.quantity);
         })
         .catch((error) => {
           this.loadingItem = '';
@@ -204,27 +193,12 @@ export default {
           }, 1000);
         });
     },
-    checkQuantity() {
-      if (this.quantity <= 0) {
-        this.notice.msg = '數量不可小於1';
-        this.notice.class = 'error';
-        $('#noticeModal').modal('show');
-
-        setTimeout(() => {
-          $('#noticeModal').modal('hide');
-          this.quantity = 1;
-        }, 1000);
-      }
-    },
-    updateFavorite(id) {
+    removeFavorite(id) {
       const favoriteId = this.favoriteList.indexOf(id);
 
-      if (favoriteId === -1) {
-        this.favoriteList.push(id);
-        this.notice.msg = '已加入收藏。';
-        this.notice.class = 'success';
-      } else {
+      if (favoriteId !== -1) {
         this.favoriteList.splice(favoriteId, 1);
+        this.getFavorites();
         this.notice.msg = '已取消收藏。';
         this.notice.class = 'success';
       }
@@ -238,14 +212,7 @@ export default {
     },
   },
   created() {
-    this.getProduct();
-  },
-  watch: {
-    $route() {
-      document.body.scrollTop = 0;
-      document.documentElement.scrollTop = 0;
-      this.getProduct();
-    },
+    this.getProducts();
   },
 };
 </script>

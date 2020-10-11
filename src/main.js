@@ -12,6 +12,7 @@ import {
 } from 'vee-validate'; // 驗證套件
 import * as rules from 'vee-validate/dist/rules'; // 規則檔案（ex: email...）
 import zhTW from 'vee-validate/dist/locale/zh_TW.json'; // 語系檔案
+import money from './filter/money'; // 自定義元件
 import App from './App.vue';
 import router from './router';
 
@@ -40,17 +41,12 @@ localize('tw', zhTW);
 Vue.component('ValidationObserver', ValidationObserver);
 Vue.component('ValidationProvider', ValidationProvider);
 
-// 千分位
-Vue.filter('money', (num) => {
-  const parts = num.toString().split('.');
-  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-  return parts.join('.');
-});
+Vue.filter('money', money);
 
 const toastrConfig = {
   defaultTimeout: 3000,
   defaultPosition: 'toast-bottom-right',
-  defaultStyle: { 'font-family': '"微軟正黑體", "Microsoft JhengHei", Arial, Verdana, sans-serif' },
+  defaultStyle: { 'font-family': '"Microsoft JhengHei", Arial, Verdana, sans-serif' },
 };
 
 Vue.use(Toastr, toastrConfig);

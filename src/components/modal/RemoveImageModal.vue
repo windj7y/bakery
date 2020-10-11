@@ -38,15 +38,15 @@ export default {
 
       this.$http.delete(url)
         .then(() => {
-          this.isLoading = false;
           $('#removeImageModal').modal('hide');
           this.$toastr.s('刪除圖片成功');
           this.$emit('update');
+          this.isLoading = false;
         })
         .catch(() => {
-          this.isLoading = false;
           $('#removeImageModal').modal('hide');
           this.$toastr.e('刪除圖片失敗');
+          this.isLoading = false;
         });
     },
   },

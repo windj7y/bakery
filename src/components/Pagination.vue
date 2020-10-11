@@ -6,7 +6,7 @@
           <span aria-hidden="true">&laquo;</span>
         </a>
       </li>
-      <li v-for="(item, key) in pages.total_pages" :key=key class="page-item" :class="{'active': item === pages.current_page}">
+      <li v-for="(item, key) in pages.total_pages" :key="key" class="page-item" :class="{'active': item === pages.current_page}">
         <a class="page-link" href="#" @click.prevent="updatePages(item)">{{ item }}</a>
       </li>
       <li class="page-item" :class="{'disabled': pages.current_page === pages.total_pages}">

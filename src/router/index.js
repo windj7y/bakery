@@ -1,13 +1,12 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import Home from '../views/Home.vue';
 
 Vue.use(VueRouter);
 
 const routes = [
   {
     path: '/',
-    component: Home,
+    component: () => import('../views/Home.vue'),
     children: [
       {
         path: '',
@@ -24,6 +23,10 @@ const routes = [
       {
         path: '/product/:id',
         component: () => import('../views/Product.vue'),
+      },
+      {
+        path: '/favorite',
+        component: () => import('../views/Favorite.vue'),
       },
       {
         path: '/cart',

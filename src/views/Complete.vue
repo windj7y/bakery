@@ -1,12 +1,12 @@
 <template>
   <div>
     <loading :active.sync="isLoading"></loading>
-    <banner :bannerData="bannerData"></banner>
+    <Banner :bannerData="bannerData"></Banner>
 
     <div class="container my-5">
       <div class="row justify-content-center">
         <div class="col-md-8">
-        <shoppingProcess :process="process"></shoppingProcess>
+        <ShoppingProcess :process="process"></ShoppingProcess>
 
           <h4 class="order-title-complete pl-2">訂單明細</h4>
           <table class="table cart-list mb-4">
@@ -21,7 +21,7 @@
             <tbody>
               <tr v-for="item in order.products" :key="item.id">
                 <td width="120px">
-                  <img class="img-fluid" :src="item.product.imageUrl[0]">
+                  <img class="img-fluid" :src="item.product.imageUrl[0]" :alt="item.product.title">
                 </td>
                 <td class="text-left">
                   {{ item.product.title }}
@@ -93,17 +93,23 @@
         </div>
       </div>
     </div>
+
+    <NoticeModal :notice="notice"></NoticeModal>
   </div>
 </template>
 
 <script>
-import banner from '@/components/Banner.vue';
-import shoppingProcess from '@/components/ShoppingProcess.vue';
+/* global $ */
+
+import Banner from '@/components/Banner.vue';
+import ShoppingProcess from '@/components/ShoppingProcess.vue';
+import NoticeModal from '@/components/modal/NoticeModal.vue';
 
 export default {
   components: {
-    banner,
-    shoppingProcess,
+    Banner,
+    ShoppingProcess,
+    NoticeModal,
   },
   data() {
     return {
@@ -112,6 +118,10 @@ export default {
       },
       cartTotal: 0,
       discount: '',
+      notice: {
+        msg: '',
+        class: '',
+      },
       bannerData: {
         title: '訂購完成',
         class: 'cart-banner',
@@ -128,7 +138,6 @@ export default {
 
       this.$http.get(url)
         .then((res) => {
-          this.isLoading = false;
           this.order = res.data.data;
 
           if (this.order.coupon && this.order.coupon.enabled) {
@@ -138,8 +147,18 @@ export default {
             });
             this.discount = this.cartTotal - this.order.amount;
           }
+
+          this.isLoading = false;
         })
         .catch(() => {
+          this.notice.msg = '無法取得訂單資訊';
+          this.notice.class = 'error';
+          $('#noticeModal').modal('show');
+
+          setTimeout(() => {
+            $('#noticeModal').modal('hide');
+          }, 1000);
+
           this.isLoading = false;
         });
     },

@@ -38,16 +38,16 @@ export default {
 
       this.$http.post(url, this.user)
         .then((res) => {
-          this.isLoading = false;
           const { token } = res.data;
           const { expired } = res.data;
-
           document.cookie = `hexToken=${token}; expires=${new Date(expired * 1000)};`;
+
           this.$router.push('/admin/products');
+          this.isLoading = false;
         })
         .catch(() => {
-          this.isLoading = false;
           this.$toastr.e('登入失敗，請重新登入');
+          this.isLoading = false;
         });
     },
   },

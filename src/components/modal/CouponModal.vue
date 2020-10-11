@@ -97,15 +97,15 @@ export default {
 
       this.$http[method](url, this.tempCoupon)
         .then(() => {
-          this.isLoading = false;
           $('#couponModal').modal('hide');
           this.$toastr.s(`${type}優惠券成功`);
           this.$emit('update');
+          this.isLoading = false;
         })
         .catch(() => {
-          this.isLoading = false;
           $('#couponModal').modal('hide');
           this.$toastr.e(`${type}優惠券失敗`);
+          this.isLoading = false;
         });
     },
   },

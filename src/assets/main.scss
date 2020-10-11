@@ -213,19 +213,15 @@ ul {
 
 .product-item {
   color: #555;
-  padding: .25rem 1.25rem;
-  border: 2px solid rgba(0, 0, 0, .125);
-  border-style: none solid;
+  padding: .5rem;
 
   &:hover, &:active {
-    background-color: #fff;
     color: #ab6135;
   }
 
   &.active {
-    background-color: #fff;
+    font-weight: bold;
     color: #824420;
-    border-color: rgba(0, 0, 0, .125);
   }
 }
 
@@ -236,7 +232,7 @@ ul {
 
 // product
 
-.origin-price{
+.origin-price {
   color: #c4c4c4;
   text-decoration: line-through;
 }
@@ -244,6 +240,25 @@ ul {
 .price-size {
   font-size: 24px;
 }
+
+.heart-icon {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  color: #824420;
+
+  &:hover, &:active {
+    color: #ab6135;
+  }
+}
+
+// favorite
+
+.favorite-title {
+  color: #212529;
+  border-bottom: 2px solid #ed7d31;
+}
+
 
 // cart
 
@@ -296,6 +311,14 @@ ul {
 .quantity {
   width: 60px;
   text-align: center;
+}
+
+.buy {
+  color: #ed7d31;
+
+  &:hover, &:active {
+    color: #FF6363;
+  }
 }
 
 // checkout
