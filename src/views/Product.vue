@@ -6,34 +6,36 @@
         <div class="col-md-6 mb-4">
           <img :src="product.imageUrl[0]" class="img-fluid" :alt="product.title">
         </div>
-        <div class="col-md-6 d-flex flex-column justify-content-center px-5">
-          <h2 class="font-weight-bold mb-4">{{ product.title }}</h2>
-          <p class="about-desc">
-            {{ product.description }}
-          </p>
-          <div class="text-right mb-3">
-            <p v-if="product.origin_price && product.origin_price !== product.price" class="origin-price mb-0">NT$ {{ product.origin_price | money }}</p>
-            <p v-if="product.price" class="font-weight-bold price price-size">NT$ {{ product.price | money }}</p>
-          </div>
-          <div class="d-flex justify-content-between mb-3">
-            <input type="number" name="數量" class="form-control quantity w-50 mr-4" min="1" v-model="quantity" @change="checkQuantity()">
-            <button type="button" class="btn btn-primary w-50" @click="addCart(product.id)" :disabled="loadingItem === product.id">
-              <span v-if="loadingItem === product.id" >
-                <span class="spinner-border spinner-border-sm"></span>
-                加入中
-              </span>
-              <span v-else>加入購物車</span>
-            </button>
-          </div>
-          <div class="text-right">
-            <button type="button" class="btn btn-outline-primary" @click="updateFavorite(product.id)">
-              <span v-if="favoriteList.indexOf(product.id) === -1">
-                <i class="far fa-heart"></i> 加入收藏
-              </span>
-              <span v-else>
-                <i class="fas fa-heart"></i> 已加入收藏
-              </span>
-            </button>
+        <div class="col-md-6">
+          <div class="p-4 d-flex flex-column justify-content-center">
+            <h2 class="font-weight-bold mb-3">{{ product.title }}</h2>
+            <p class="about-desc">
+              {{ product.description }}
+            </p>
+            <div class="text-right mb-3">
+              <p v-if="product.origin_price && product.origin_price !== product.price" class="origin-price mb-0">NT$ {{ product.origin_price | money }}</p>
+              <p v-if="product.price" class="font-weight-bold price price-size">NT$ {{ product.price | money }}</p>
+            </div>
+            <div class="d-flex justify-content-between mb-3">
+              <input type="number" name="數量" class="form-control quantity w-50 mr-4" min="1" v-model="quantity" @change="checkQuantity()">
+              <button type="button" class="btn btn-primary w-50" @click="addCart(product.id)" :disabled="loadingItem === product.id">
+                <span v-if="loadingItem === product.id" >
+                  <span class="spinner-border spinner-border-sm"></span>
+                  加入中
+                </span>
+                <span v-else>加入購物車</span>
+              </button>
+            </div>
+            <div class="text-right">
+              <button type="button" class="btn btn-outline-primary" @click="updateFavorite(product.id)">
+                <span v-if="favoriteList.indexOf(product.id) === -1">
+                  <i class="far fa-heart"></i> 加入收藏
+                </span>
+                <span v-else>
+                  <i class="fas fa-heart"></i> 已加入收藏
+                </span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
